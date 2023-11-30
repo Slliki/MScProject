@@ -7,7 +7,7 @@
 - Public IP:`ec2-107-22-76-86.compute-1.amazonaws.com`
 - username:`ubuntu`
 
-![img_4.png](img_4.png)
+![img_4.png](img/img_4.png)
 
 ## TASK B - 创建 S3 存储桶
 - 创建 S3 存储桶（上传）：`yhb-wordfreq-uploading`
@@ -16,7 +16,7 @@
   - uploading：`arn:aws:s3:::yhb-wordfreq-uploading`
   - processing：`arn:aws:s3:::yhb-wordfreq-processing`
 
-![img_3.png](img_3.png)
+![img_3.png](img/img_3.png)
 
 ## TASK C - 创建 SQS 队列
 - 创建 SQS 队列（用于文件处理作业）：`yhb-wordfreq-jobs`
@@ -24,7 +24,7 @@
 - 创建 SQS 队列（用于文件处理结果）：`yhb-wordfreq-results`
 - 记录队列 URL：`https://sqs.us-east-1.amazonaws.com/666353528894/wordfreq-results`
 
-![img_2.png](img_2.png)
+![img_2.png](img/img_2.png)
 
 ## TASK D - 创建 Amazon SNS 主题
 - 创建 Amazon SNS 主题：`yhb-wordfreq-file-copied`
@@ -32,7 +32,7 @@
 - 创建第一个订阅：wordfreq-file-copied
 - 创建第二个订阅，对私人电子邮件发送：wordfreq-file-copied
 
-![img.png](img.png)![img_1.png](img_1.png)
+![img.png](img/img.png)![img_1.png](img/img_1.png)
 
 ## TASK E - 从存储桶配置文件复制通知到 SNS
 - 在s3控制台选择processing存储桶，在properties中创建event notification
