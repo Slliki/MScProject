@@ -226,7 +226,10 @@
 
 3. **上传文本文件：**
    - 将任何文本文件（您可以使用 BB 上的 data.zip 中的任何文本文件）上传到您的 'processing' S3 存储桶，例如 `zj-wordfreq-nov23-processing`。
-
+   - 可以使用s3控制台直接点击upload上传；也可以使用命令行工具运行`run_upload.sh`脚本：
+   ```
+   run_upload.sh BUCKET_NAME FILE_TO_UPLOAD
+   ```
    - 您应该在几分钟后看到 worker 检索作业并成功处理作业。您可以在 DynamoDB 表中检查结果。
    - 您还应该收到一个设置在 SNS 主题中的电子邮件地址发送的电子邮件，其中仅包含已处理的作业消息。注意 S3 信息，包括对象键（文件路径）。
 
