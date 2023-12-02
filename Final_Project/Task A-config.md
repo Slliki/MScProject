@@ -98,7 +98,30 @@
      sudo apt install awscli
      sudo apt install unzip
      ```
-
+7. **安装并配置 Go 语言环境：**
+   - 下载 Go 语言包：
+     ```
+     wget https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
+     ```
+   - 解压文件并移动到相应目录：
+     ```
+     sudo tar -C /usr/local -xzf go1.20.1.linux-amd64.tar.gz
+     ```
+   - 在 `.bash_profile` 中添加 Go 到 `$PATH` 环境变量：
+     ```
+     vi ~/.bash_profile
+     ```
+       ```
+       export PATH=$PATH:/usr/local/go/bin
+       export GOPATH=$HOME/go
+       export PATH=$PATH:$GOPATH/bin
+       ```
+   - 重新加载 profile 并检查 Go 是否安装以及其版本：
+     ```
+     source ~/.bash_profile
+     go version # 正常显示版本则表示安装成功
+     ```
+     
 ## TASK G - 将应用代码压缩包复制到 S3 存储桶 
 - 上传`lsde-wordfreq-app.zip`到uploading存储桶
 - 该文件的s3 uri：`s3://yhb-wordfreq-uploading/lsde-wordfreq-app.zip`

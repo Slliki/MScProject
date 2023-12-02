@@ -47,10 +47,9 @@
 ![img_7.png](img/img_7.png)
 - wordfreq-jobs：这个队列有52条消息可用（Messages available），这意味着有52条消息等待被处理。此外，有12条消息处于飞行状态（Messages in flight），这意味着这些消息已经被某个消费者接收但还没有被删除或处理完成。
 - wordfreq-results：这个队列有53条消息可用，没有消息处于飞行状态。
-- “消息可用”指的是队列中等待被消费者接收的消息数量。这些消息尚未被任何消费者接收。
-- “消息在飞行中”是指那些已经被消费者接收，但尚未被删除的消息。在消息处理完毕之后，消费者需要从队列中删除这些消息，以防止它们被再次处理。如果消费者在处理消息后没有成功删除消息，该消息会在“可见性超时”期满后再次变为可用状态。
+- “message available”指的是队列中等待被消费者接收的消息数量。这些消息尚未被任何消费者接收。
+- “message in flight”是指那些已经被消费者接收，但尚未被删除的消息。在消息处理完毕之后，消费者需要从队列中删除这些消息，以防止它们被再次处理。如果消费者在处理消息后没有成功删除消息，该消息会在“可见性超时”期满后再次变为可用状态。
 
-![img_6.png](img/img_6.png)
 
 可以看到，使用approximateNumberOfMessagesVisible作为指标，
 在三分钟内该指标数量下降10左右，说明每分钟可以处理3-4个消息。（此时仅有一个EC2实例）
@@ -73,14 +72,15 @@
    - 因此，如果`ApproximateNumberOfMessagesVisible`超过20，可以考虑扩展一个新实例。
    - 对于缩减规模，如果`ApproximateNumberOfMessagesVisible`持续低于5（考虑到冷却时间和处理波动），可以考虑移除一个实例。
 
-这些阈值需要根据实际运行情况进行调整。建议在实际工作负载下进行测试，并观察实例的扩展和缩减对队列长度的影响，以便进行适当的微调。
+ApproximateNumberOfMessagesVisible表示在SQS队列中当前可见的消息数量，也就是说，这些消息目前等待被处理而还未被任何消费者接收。
+这个指标可以用来估算队列中待处理消息的数量，以及是否需要扩展新的工作实例来处理这些消息。
 
 
 ## 4. 创建Auto Scaling Group
 1. **创建Auto Scaling Group：**
    - 在 EC2 控制台中，选择“Auto Scaling Groups”。
    - 点击“Create Auto Scaling Group”。
-   - 选择刚刚创建的 Launch Template。
+   - 选择刚刚创建的 Launch Template。（使用ami-backup3作为template）
    - 选择no load balancer。
    - additional settings中，选择“Enable group metrics collection”。使得CloudWatch可以收集组内实例的指标。
    - 设置desired capacity为1，min capacity为1，max capacity为2
@@ -105,3 +105,50 @@
 
 其中Simple 和 Step policy可以根据cloudwatch的指定指标得到的alarm进行调整，而Target policy则是根据指定的target value（仅四五个）进行调整。
 
+选择simple policy即可。
+
+
+# Work load testing
+
+## EXP1
+原初设定：
+
+- **Auto Scaling 组名字**: wf-autoscaling
+- **期望容量（Desired Capacity）**: 1
+- **最小容量（Minimum Capacity）**: 1
+- **最大容量（Maximum Capacity）**: 3
+
+1. **添加实例策略**:
+   - 当 `ApproximateNumberOfMessagesVisible` 大于等于 20 消息超过 180 秒时，添加一个实例。
+   - 在另一个扩展活动之前有 200 秒的冷却期。
+
+2. **移除实例策略**:
+   - 当 `ApproximateNumberOfMessagesVisible` 小于 5 消息持续 300 秒时，移除一个实例。
+
+
+
+### 分析与建议：
+
+- **添加实例策略**:
+  - 您设置的阈值 20 可能是基于每个实例处理消息的能力和处理时间来决定的。考虑到每个消息的处理时间为 10-20 秒，阈值 20 意味着如果单个实例不能在 180 秒内处理这些消息，就会启动另一个实例。您需要观察这是否导致了过度扩展。
+
+- **移除实例策略**:
+  - 阈值 5 消息，连续 5 分钟，这个设置比较保守，意味着只有在消息量非常低的情况下才会减少实例。如果实例的处理速度非常快，可能会导致实例在不必要的时候运行，增加成本。
+
+- **冷却时间**:
+  - 200 秒的冷却时间看似合理，但这也取决于您的应用程序启动新实例并开始处理消息所需的时间。如果启动和初始化时间非常快，冷却时间可能稍微调短；如果较慢，则冷却时间可能需要加长。
+  - 观测到auto scaling group自动扩展启动一个实例的start time和end time，发现start time和end time的差值大概为40s，可以合理降低冷却时间。比如将冷却时间设置为100s。
+- **CloudWatch 监控**:
+  - 您应该监控 CloudWatch 中的 `ApproximateNumberOfMessagesVisible` 指标，以验证实际的消息处理速度和队列深度是否符合预期，并根据实际表现调整策略阈值。
+
+
+```
+aws s3 cp s3://yhb-wordfreq-uploading s3://yhb-wordfreq-processing --exclude "*" --include "*.txt" --recursive
+```
+这个代码表示将yhb-wordfreq-uploading中的所有txt文件复制到yhb-wordfreq-processing中，
+
+![img_1.png](img_1.png)
+上图为auto scaling group的监控图，可以看到在大约10mins内，auto scaling group的activity日志，
+其中每个实例的start time表示启动一个新的实例，end time表示结束自动扩展，实例开始运行
+
+**认为自动扩展时启动一个实例大概需要40s。**
