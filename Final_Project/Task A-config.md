@@ -192,10 +192,7 @@ sudo journalctl -f -u wordfreq
   ```
   aws s3 cp s3://yhb-wordfreq-uploading s3://yhb-wordfreq-processing --exclude "*" --include "*.txt" --recursive
   ```
-- 通过journalctl查看日志，可以看到worker自动处理文件
-```shell
-sudo journalctl -u -f wordfreq
-```
+
 - 此过程结束后应该会收到120个email以及120个sqs-jobs队列的通知
 - 注意：在工作进行中时，sqs-jobs和sqs-results都会收到通知，但是当工作结束后，sqs-jobs不会再收到通知，只有sqs-results会收到通知，这是因为worker会自动删除sqs-jobs队列中的消息，但是不会删除sqs-results队列中的消息。
 
