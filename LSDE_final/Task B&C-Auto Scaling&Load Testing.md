@@ -217,11 +217,11 @@ Alarms：
 - ApproximateNumberOfMessagesVisible <= 9 for 2 datapoints within 5 minutes
 - ApproximateNumberOfMessagesVisible >= 10 for 1 datapoints within 1 minutes
 
-![img_11.png](img_11.png)
+![img_11.png](img/img_11.png)
 
 results：
 
-![img_12.png](img_12.png)
+![img_12.png](img/img_12.png)
 
 总共处理时间：约11min\
 自动扩展行为时间：有180s预热时间
@@ -230,7 +230,7 @@ auto2：start18：37：16--end18：45：19
 
 cost:0.00657
 
-![img_13.png](img_13.png)
+![img_13.png](img/img_13.png)
 
 ## EXP7--great one
 300 files
@@ -245,13 +245,13 @@ cost:$0.01392
 
 
 ## EXP4
-![img_16.png](img_16.png)
+![img_16.png](img/img_16.png)
 
 上传了约300个txt文件用于此次测试。
 
 实例类型：all t2.micro
 
-![img_15.png](img_15.png)
+![img_15.png](img/img_15.png)
 
 Desired capacity:1, Min capacity:1, Max capacity:5. All instances are t2.micro
 

@@ -1,4 +1,4 @@
-# Optimise the Architecture
+# Issues and Solutions
 
 ## 1. Issues and Solutions
 ### 1.1. 自动扩展行为失败
@@ -36,14 +36,34 @@ t2.micro（权重1）、t2.small（权重2）、t2.medium（权重3）。
 解决方法：修改alarm，将datapoints to alarm改为1 out 1min，这样对指标探测十分敏感，可以在短时间内触发remove 3 capacity units的动作。
 增加完成工作后的缩减速度，减少成本。
 
+3. issue3：\
+使用mix-instances的auto scaling group进行负载测试时，自动扩展行为只会添加t2.small类型的实例.此时我的实例权重如下：\
+![img_21.png](img/img_21.png)
 
-## 2. Optimised Architecture
-### 2.1. Architecture Diagram
+解决方法：在混合实例Auto Scaling组中，不同实例类型的权重会影响Auto Scaling选择添加哪种类型的实例。如果t2.small的权重最低，
+那么在成本优化的逻辑下，Auto Scaling更倾向于添加成本最低的实例。\
+为了使Auto Scaling能够根据负载添加不同类型的实例，您可以这样修改您的扩展策略：
+
+- 对于添加实例（Step Add）：
+添加容量单位时，设置具体的容量单位数值，如4或8，这样Auto Scaling有更多选择来决定添加哪种实例类型。
+例如：如果您设置“Add 4 capacity units when 20 <= ApproximateNumberOfMessagesVisible < 60”，Auto Scaling可能会选择添加一个t2.xlarge实例或者两个t2.medium实例。
+- 对于移除实例（Step Remove）：
+移除容量单位时，同样要考虑权重。设置具体的容量单位数值，如4或8。
+例如：如果您设置“Remove 4 capacity units when 15 >= ApproximateNumberOfMessagesVisible >= 5”，Auto Scaling可能会移除一个t2.xlarge实例或者两个t2.medium实例。
+
+4. issue4：\
+在添加自动扩展策略时，发现报错：
+```
+/Add policy]' at 'alarmActions' failed to satisfy constraint: Member must have length less than or equal to 5
+```
+即一个alarm只能连接到5个policy。\
+解决方法：删除多余的policy即可
+
 
 
 ### 2.2. Auto Scaling Group
-- 使用不同availability zones和subnet来提高可用性。
+- 使用不同availability zones和subnet来提高可用性。 **done**
 - 实际工作中可能不是直接一次性将文件从uploading桶上传到processing桶，而是分批次不断上传，
 此时可能需要根据实际情况继续调整扩展策略，包括设定新的CloudWatch alarm，以及修改scaling policy。以达到
 减少由于短暂的数值波动导致的误报的情况，保证自动扩展的可靠性和效率。
-
+- 使用s3 versioning功能，可以在文件上传时自动创建版本，以防止重要文件被覆盖或者误删。
