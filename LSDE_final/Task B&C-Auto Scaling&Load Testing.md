@@ -305,3 +305,28 @@ auto5：9min，540s
 总共时间：2542s
 cost:$0.03325
 
+
+## EXP7
+使用approximatenumberofmessagenotvisible作为缩减metric
+
+Add policy:
+- Add 3 capacity units when 60 <= ApproximateNumberOfMessagesVisible < 120
+- Add 3 capacity units when 120 <= ApproximateNumberOfMessagesVisible < +infinity
+
+Remove policy:
+- Remove 4 capacity units when 20 >= ApproximateNumberOfMessagesNotVisible > -infinity
+
+auto1：10:57:31--11:05:55，504s
+auto2：10:57:31--11:05:55，504s
+auto3：10:57:31--11:05:55，504s
+auto4：11min
+total：504*3+660=2672s
+$0.00870
+
+
+## tip
+如果remove的alarm过于敏感（1 out 3）,此时如果使用small或micro的instasnce，会导致在即将结束时
+过于快速缩减，导致实际处理message时间边长。
+
+medium类型则由于处理速度较快，可以使用1out3\
+更弱的类型必须调整remove的敏感度，使用2out3尝试。
