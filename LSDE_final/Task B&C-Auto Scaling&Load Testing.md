@@ -323,6 +323,31 @@ auto4：11min
 total：504*3+660=2672s
 $0.00870
 
+## EXP8
+使用t3.large\
+add：
+- add 8 capacity units when 60 <= ApproximateNumberOfMessagesVisible < infinity
+remove：
+- remove 7 capacity units when 20 >= ApproximateNumberOfMessagesNotVisible > -infinity
+
+4min
+auto1：05:54:35--06:01:34，419s
+auto2-8：05:54:35--06:00:41，366s
+419+366*7=2937s
+$0.06795
+
+## EXP9
+使用t3.xlarge\
+add：
+- add 8 capacity units when 60 <= ApproximateNumberOfMessagesVisible < infinity
+remove：
+- remove 7 capacity units when 20 >= ApproximateNumberOfMessagesNotVisible > -infinity
+
+2min
+auto1-8：06:29:27--06:37:20，473s
+time：473*8=3784s ---> 300*8=2400s
+cost：$0.11093
+
 
 ## tip
 如果remove的alarm过于敏感（1 out 3）,此时如果使用small或micro的instasnce，会导致在即将结束时
