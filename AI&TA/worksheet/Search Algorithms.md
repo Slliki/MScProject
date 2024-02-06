@@ -1,4 +1,4 @@
-# Search Algorhtms Problems
+# Worksheet for Search Algorhtms Problems
 ## Q1: DFS, BFS, UCS
 
 <img src="C:\Users\yhb\MscProject\AI&TA\AI\images\img_15.png">
