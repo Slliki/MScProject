@@ -60,11 +60,11 @@ transform = transforms.Compose([
 ])
 
 # 下载并加载训练集
-train_dataset = datasets.MNIST(root='C:\\Users\\yhb\\MscProject\\AI&TA\\data', train=True, download=False, transform=transform)
+train_dataset = datasets.MNIST(root='C:\\Users\\yhb\\MscProject\\AI_TA\\data', train=True, download=False, transform=transform)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
 # 下载并加载测试集
-test_dataset = datasets.MNIST(root='C:\\Users\\yhb\\MscProject\\AI&TA\\data', train=False, download=False, transform=transform)
+test_dataset = datasets.MNIST(root='C:\\Users\\yhb\\MscProject\\AI_TA\\data', train=False, download=False, transform=transform)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 
