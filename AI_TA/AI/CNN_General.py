@@ -49,7 +49,7 @@ class LeNet5(nn.Module):
         return x
 
 
-# 加载数据集
+# 加载数据集，batch_size 设置为 64，即每次训练模型传入 64 张图片
 batch_size = 64
 
 # MNIST 数据集的转换器，首先将数据转换为张量，然后标准化
@@ -60,7 +60,7 @@ transform = transforms.Compose([
 ])
 
 # 下载并加载训练集
-train_dataset = datasets.MNIST(root='C:\\Users\\yhb\\MscProject\\AI_TA\\data', train=True, download=False, transform=transform)
+train_dataset = datasets.MNIST(root='C:\\Users\\yhb\\MscProject\\AI_TA\\data', train=False, download=False, transform=transform)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
 # 下载并加载测试集
@@ -135,25 +135,36 @@ for epoch in range(1, 4): # 这里只训练了一个epoch
 # 关闭 SummaryWriter
 writer.close()
 
-# # 绘制损失曲线 每个epoch的平均损失
-# plt.figure(figsize=(12, 5))
-# plt.subplot(1, 2, 1)
-# plt.plot(train_epoch_losses, label='Train Loss')
-# plt.xlabel('Epoch')
-# plt.ylabel('Average Loss')
-# plt.title('Train Loss per Epoch')
-# plt.legend()
+
+
+# 除了使用 SummaryWriter 记录损失之外，还可以直接通过return loss list的方式来记录损失，然后在训练结束后绘制损失曲线。
+# def train(optimizer_name, model, device, train_loader, epochs=10):
+#     model.train()
+#     # 使用一个list来记录每个iteration的loss；
+#     # iteration是自定义的，可以设置每10个batch为一个iteration，即每10个batch记录一次loss
+#     loss_list = []
+#     for epoch in range(epochs):
+#         for batch_idx, (data, target) in enumerate(train_loader):
+#             data, target = data.to(device), target.to(device)
+#             optimizer.zero_grad()
+#             output = model(data)
+#             loss = F.nll_loss(output, target)
+#             loss.backward()
+#             optimizer.step()
 #
-# plt.subplot(1, 2, 2)
-# plt.plot(test_epoch_losses, label='Test Loss')
-# plt.xlabel('Epoch')
-# plt.ylabel('Average Loss')
-# plt.title('Test Loss per Epoch')
-# plt.legend()
-#
-# plt.tight_layout()
+#         # 每训练10个batch存储一次loss(loss在每次训练都计算，但只有此时进行记录)
+#         # 即每个iteration表示10个batch，每10个batch记录一次loss
+#             if batch_idx % 10 == 0:
+#                 loss_list.append(loss.item())
+#     return loss_list
+
+
+# 绘制损失曲线
+# loss_list = train(optimizer, model, device, train_loader)
+# plt.plot(loss_list)
+# plt.xlabel('Iteration')
+# plt.ylabel('Loss')
+# plt.title('Training Loss')
 # plt.show()
-
-
 
 
