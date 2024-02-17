@@ -1,7 +1,7 @@
 # Worksheet for Search Algorhtms Problems
 ## Q1: DFS, BFS, UCS
 
-<img src="C:\Users\yhb\MscProject\AI&TA\AI\images\img_15.png">
+<img src="C:\Users\yhb\MscProject\AI_TA\AI\images\img_15.png">
 
 1.Depth First Search (DFS)
 A-->B-->D-->F-->K-->back to F-->L-->back to F-->back to D-->back to B-->E-->back to B-->back to A-->C-->G
@@ -11,18 +11,21 @@ A-->B-->C-->D-->E-->G
 
 3.Uniform Cost Search (UCS)
 使用均匀成本搜索（Uniform Cost Search, UCS），搜索的具体过程如下：
+使用均匀成本搜索算法（Uniform Cost Search）到达目标节点G的搜索过程如下：
 
-1. 从起始节点A开始，目前的累积成本为0。
-2. 扩展节点A的子节点B和C，它们的累积成本分别为A到B（成本1）和A到C（成本3）。
-3. 下一步，选择累积成本最小的节点，这里是B（成本1）。
-4. 然后，从B出发，扩展子节点D和E，它们的累积成本分别是A-B-D（成本2）和A-B-E（成本2）。由于成本相同，按照字母顺序，D和E将被放入待扩展队列。
-5. 然而，在D和E被扩展之前，我们先扩展了C，因为C的成本（3）小于D和F的成本（均为3）。
-6. 从C出发，我们可以直接到达G，此时累积成本为A-C-G（成本4），因为G是目标节点，搜索到此结束。
+- 首先，将根节点A放入优先队列，此时队列为：[(A, 0)]（这里的元组表示（节点，累计成本））。
+- 取出队列中成本最低的节点A，将A的子节点B和C放入队列，因为B的路径成本是1，C的路径成本是3，队列更新为：[(B, 1), (C, 3)]。
+- 继续取出队列中成本最低的节点B，将B的子节点D和E放入队列，D和E的路径成本都是2（从A通过B到D或E），队列更新为：[(D, 2), (E, 2), (C, 3)]。
+- 取出节点D，因为D还有子节点F，将其放入队列，F的路径成本是3（从A通过B和D到F），队列更新为：[(E, 2), (F, 3), (C, 3)]。
+- 取出节点E，但是E没有子节点，所以队列不变。
+- 取出节点F，将F的子节点K和L放入队列，K和L的路径成本都是5（从A通过B、D和F到K或L），队列更新为：[(C, 3), (K, 5), (L, 5)]。
+- 取出节点C，这是一个关键的步骤，因为C是目标节点G的父节点。将C的子节点G和H放入队列，G的路径成本是4（找到目标），H的路径成本是5，队列更新为：[(G, 4), (K, 5), (L, 5), (H, 5)]。 
+- 最后，取出成本最低且是目标节点的节点G。此时，我们找到了从A到G的最低成本路径，算法结束。
 
-所以，UCS的具体扩展过程为：A -> C -> G。到达G后搜索停止，总成本为4。
+整个过程的搜索路径是 `A -> C -> G`，累积的总成本是4。
 
 ### Q2: Water Jug Problem--BFS or DFS
-<img src="C:\Users\yhb\MscProject\AI&TA\AI\images\img_17.png">
+<img src="C:\Users\yhb\MscProject\AI_TA\AI\images\img_17.png">
 
 这是关于水桶问题的：
 
@@ -55,7 +58,7 @@ A-->B-->C-->D-->E-->G
 (iii) 为了找到最优解，广度优先搜索（BFS）通常更好。因为在水桶问题中，我们通常不知道解的深度，BFS可以按层次搜索所有状态，从而保证找到的第一个解是最优解。相反，深度优先搜索（DFS）可能会沿着一个不是最优解的路径深入搜索，导致找到的第一个解可能不是最优的。此外，BFS在水桶问题中更有优势，因为它可以在不太深的层次中找到解，而DFS可能会不必要地深入很多层。
 ## Q3: Greedy Best First Search
 
-<img src="C:\Users\yhb\MscProject\AI&TA\AI\images\img_18.png">
+<img src="C:\Users\yhb\MscProject\AI_TA\AI\images\img_18.png">
 
 这个问题是关于启发式搜索的：
 
@@ -92,7 +95,7 @@ G=0
 
 问题4. 我们给定了下图，每个节点都有一个标识符和启发式值，每条边都有一个代价。
 
-<img src="C:\Users\yhb\MscProject\AI&TA\AI\images\img_19.png">
+<img src="C:\Users\yhb\MscProject\AI_TA\AI\images\img_19.png">
 
 问题4a 展示从S到G（目标节点）A*搜索看到的节点顺序。在搜索过程中对于每个节点展示其f和g值。如果一个节点通过多条路径到达，每到达一次就展示其f和g值，并标明其父节点。
 

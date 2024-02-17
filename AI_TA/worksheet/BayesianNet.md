@@ -1,6 +1,6 @@
 # Worksheet for Bayesian Networks
 ## Q1: 
-<img src="C:\Users\yhb\MscProject\AI&TA\AI\images\img_21.png">
+<img src="C:\Users\yhb\MscProject\AI_TA\AI\images\img_21.png">
 
 1.(a):独立随机变量的例子：掷一枚公平的硬币的结果（正面或反面）和掷一枚公平骰子的结果（1到6）是独立的随机变量，
 因为硬币的结果不影响骰子的结果，反之亦然。
@@ -15,7 +15,7 @@
 - a=P(Y=1)P(X=0)=0.6* 0.25=0.15; b=P(Y=1)P(X=1)=0.6*0.75=0.45;
 
 ## Q2:
-<img src="C:\Users\yhb\MscProject\AI&TA\AI\images\img_22.png">
+<img src="C:\Users\yhb\MscProject\AI_TA\AI\images\img_22.png">
 
 1.(a):What is the posterior probability, P(S = 1|W = 1), that the sprinkler is on
 given that the grass is wet?
@@ -92,7 +92,7 @@ P_S_T_given_W_T_R_T_alternative
 ```
 
 ## Q3:
-<img src="C:\Users\yhb\MscProject\AI&TA\AI\images\img_23.png">
+<img src="C:\Users\yhb\MscProject\AI_TA\AI\images\img_23.png">
 
 一个病人可能有一个症状S，这个症状可以由两种不同的疾病A和B引起。已知一个基因G的存在对于疾病A的表现很重要。贝叶斯网络和条件概率表显示在图2中。
 - (a) 一个病人患有疾病A的概率是多少？
@@ -132,7 +132,7 @@ P_S_given_B, P_A_given_B_S
 ```
 
 ## Q4:
-<img src="C:\Users\yhb\MscProject\AI&TA\AI\images\img_24.png">
+<img src="C:\Users\yhb\MscProject\AI_TA\AI\images\img_24.png">
 
 这个问题是关于贝叶斯网络的随机变量的独立性的。问题可以翻译如下：
 
@@ -145,6 +145,7 @@ P_S_given_B, P_A_given_B_S
 
 解答：
 
-(a) 在没有给定任何条件的情况下，随机变量 `X3,1` 依赖于 `X2,1`，而 `X2,1` 又依赖于 `X1,1`。因此，直接依赖于 `X1,1` 或 `X2,1` 的任何变量都不独立于 `X3,1`。根据给定的网络，`X1,2` 和 `X1,3`，以及与它们相连的任何下游变量，都独立于 `X3,1`。
+(a) 在没有给定任何条件的情况下，`X3,1`与除了直接相连的`X2,1`,`X3,2`非独立，与其他
+节点都独立。
 
-(b) 给定 `X1,1` 的情况下，由于 `X3,1` 直接依赖于 `X2,1`，而 `X2,1` 依赖于 `X1,1`，这意味着 `X1,1` 提供了关于 `X3,1` 的所有必要信息，因此除了 `X1,1` 和 `X2,1` 以及它们的直接后代 `X2,2`、`X2,3`、`X3,2` 和 `X3,3` 之外的所有变量都将独立于 `X3,1`。这包括 `X1,2` 和 `X1,3` 以及它们的后代。
+(b) 给定 `X1,1` 的情况下，`X3,1`与`X1,2`,`X1,3``X2,2`,`X2,3`独立。

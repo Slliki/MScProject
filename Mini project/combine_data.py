@@ -77,6 +77,4 @@ lob_data_pdf.to_csv('lob_data.csv', index=False)
 
 
 
-
-
 print("Data saved successfully.")
