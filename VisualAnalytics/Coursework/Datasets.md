@@ -13,15 +13,40 @@
 
 通过深入分析**Dwelling_Region.csv** 数据集，可以揭示住宅类型与经济状况之间的关系，从而为经济研究和政策制定提供支持。例如，可以通过对比不同地区或城市的住宅类型分布，了解到哪些区域可能面临更大的经济挑战或住房压力，进而为改善住宅条件和经济发展策略提供依据。
 
-### 2. Health_Region.csv
+### 2. Health_Region.csv 2011&2021
 该数据集包含了175个地区的健康状况的信息。主要分为：Very good health, Good health, Fair health, Bad health, Very bad health。
 
 可以联立Dwelling_Region.csv数据集，探索健康问题。这个数据集提供了详细的健康状况信息，这些信息可以从多个角度反映经济状况。
 
-### 3. Qualification_Region.csv
+### 3. Qualification_Region.csv 2011&2021
 该数据集反映了各地区不同教育水平人数，主要按level1-4进行区分
+
+在英国教育体系中，"Qualification Levels" 指的是不同的教育和技能资格水平。这些等级按照难度和深度逐级升高，是衡量个人学术和职业资格的标准。下面是对你提到的各个等级的简单解释：
+
+- **No Qualification**: 指没有任何正式的教育资格。
+
+- **Level 1**: 相当于GCSE（普通中等教育证书）的低等级（D-G），为学生提供基本的知识和技能。
+
+- **Level 2**: 相当于GCSE的高等级（A*-C）或者O级考试。这个等级表明了一定的基础学科知识和能力。
+
+- **Apprenticeship (学徒制)**: 学徒制是一种工作和学习相结合的教育模式，通常包括实际的工作经验和一些理论学习。它可以跨越不同的资格等级，但在这个上下文中可能特指与初级职业相关的培训和资格认证。
+
+- **Level 3**: 相当于A级考试（高等教育预科证书），为学生提供更深入的学科知识，通常是进入大学之前的学习阶段。
+
+- **Level 4 and above**: 这个范围包括大学本科（Level 4-6）和研究生（Level 7-8）资格。Level 4是高等教育的开始，包括证书和部分本科学位课程。Level 5是更高级的文凭，比如高级高等教育文凭和完整的本科学位。Level 6是本科学位的完成。Level 7和8分别对应于硕士和博士学位。
+
+- **Other Qualifications**: 指的是除上述标准外的其他任何教育或职业资格，可能包括职业特定的证书和文凭，不属于上述标准化等级体系。
 
 可以使用该数据集和Occupation数据集共同反应教育和就业情况。
 
-### 4. Occupation_Region.csv
+### 4. Occupation_Region.csv 2011&2021
 该数据集反映了各地区不同职业的人数，包含所有性别/男性/女性的数据。
+
+### 5. Homeless.csv 2011&2021
+两列，一个为household，一个为live in commual establishment，可以用来反映住房和经济状况。
+
+### 6. Age_structure.csv 2011&2021
+使用5个bin进行年龄分组，可以用来反映人口结构变化。
+
+### 7. LastYearWorked.csv
+记录就业情况，最后一份工作的年份。
