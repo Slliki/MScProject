@@ -65,3 +65,27 @@ The main contributions of the paper include:
 4. **End-to-end system**: XGBoost combines these innovative technologies to build an end-to-end system that can handle larger data with minimal resources.
 
 In general, XGBoost has become the core component of winning solutions in many data science competitions due to its excellent scalability and efficiency, and is widely used in various machine learning tasks.
+
+
+# Reflection
+Based on the comparison between your initial project plan and the current project status, here are some reflections on the progress:
+
+### Achievements
+1. **Dataset Exploration and Preprocessing**: 
+   - You thoroughly explored the dataset, gaining a deep understanding of its structure, distribution, and potential challenges.
+   - You successfully performed necessary preprocessing steps, including handling missing data, feature normalization, and feature selection. This ensured the dataset was well-prepared for model training.
+
+2. **Model Evaluation**:
+   - You rigorously evaluated the performance of various models, focusing on tree-based algorithms (XGBoost, LightGBM) and deep learning methods (TabNet).
+   - You used appropriate metrics such as F1 scores and ROC curves, which are crucial for assessing model efficacy in fraud detection.
+   - By leveraging Kaggle’s cloud computing resources, you overcame local computing limitations and successfully performed cross-validation and hyperparameter tuning.
+
+### Areas Not Fully Explored
+
+1. **Exploring Different Biases**:
+   - One of your goals was to test how different biases in the data would affect model performance. The idea was to use the variant datasets from the BAF suite to see how robust the models were in different scenarios.
+   - Unfortunately, due to time constraints and some technical hurdles, you didn’t get to dive into this part of the project. This would be a great area to explore in the future to really understand how your models hold up under different conditions.
+
+2. **Trying Out More Resampling Methods**:
+   - While you did explore several resampling techniques like random undersampling, NearMiss, SMOTE-NC, and CTGAN, there are still more methods out there that could have been tested.
+   - Expanding this exploration could help you find the best ways to handle imbalanced data in fraud detection, so this might be worth revisiting later.
