@@ -52,3 +52,119 @@ ctgan = CTGAN(
 - discriminator_dim：判别器的维度。定义判别器每一层的神经元数
 - batch_size：批处理大小
 - The frequency of logging, usually once every certain number of batches.
+
+
+## 4. evaluate_classifier
+```python
+def evaluate_classifier(classifier, x_train, y_train, x_test, y_test):
+    # Predict the labels for the training set
+    y_train_pred = classifier.predict(x_train)
+    
+    # Predict the labels for the test set using the default threshold (0.5)
+    y_pred = classifier.predict(x_test)
+    
+    # Predict the probability of the positive class for the test set
+    y_prob = classifier.predict_proba(x_test)[:, 1]
+
+    # Compute the ROC curve (fpr: false positive rate, tpr: true positive rate, thresholds_roc: thresholds for ROC)
+    fpr, tpr, thresholds_roc = roc_curve(y_test, y_prob)
+    
+    # Compute the Precision-Recall curve (precision, recall: PR curve metrics, thresholds_pr: thresholds for PR curve)
+    precision, recall, thresholds_pr = precision_recall_curve(y_test, y_prob)
+
+    # Define the target false positive rate (FPR) for threshold adjustment
+    target_fpr = 0.05
+    
+    # Find the index of the threshold that is closest to the target FPR
+    threshold_idx = np.argmin(np.abs(fpr - target_fpr))
+    
+    # Set the threshold based on the target FPR
+    threshold = thresholds_roc[threshold_idx]
+
+    # Apply the new threshold to the predicted probabilities to get the adjusted predictions
+    y_pred_threshold = (y_prob >= threshold).astype(int)
+
+    # Print the classification report for the training set
+    train_set = print_cls_report(y_train, y_train_pred, title="Train Set")
+    
+    # Print the classification report for the test set using the default threshold
+    default_recall = print_cls_report(y_test, y_pred, title="Default Threshold")
+    
+    # Print the classification report for the test set using the target FPR threshold
+    target_recall = print_cls_report(y_test, y_pred_threshold, title=f'Target Threshold @ {threshold:.2f}')
+
+    # Create a figure with two subplots for the confusion matrices
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+
+    # Plot the confusion matrix for the default threshold (0.50)
+    default_matrix = plot_con_matrix(ax1, y_test, y_pred, title='Default Threshold @ 0.50')
+    
+    # Plot the confusion matrix for the target FPR threshold
+    target_matrix = plot_con_matrix(ax2, y_test, y_pred_threshold, title=f'Target Threshold @ {threshold:.2f}')
+
+    # Adjust the layout of the plots to avoid overlap
+    plt.tight_layout()
+    
+    # Display the plots
+    plt.show()
+
+    # Return the ROC curve metrics, PR curve metrics, and classification reports
+    return fpr, tpr, precision, recall, default_recall, target_recall, y_test, y_prob
+```
+
+## 5. evaluate_model_with_threshold
+```python
+def evaluate_model_with_threshold(classifier, X_test, y_test, threshold=0.5):
+    # Predict the probability of the positive class for the test set
+    y_probs = classifier.predict_proba(X_test)[:, 1]
+
+    # Binarize the predicted probabilities based on the given threshold
+    # binarize will convert the probability to 1 if it is greater than the threshold, otherwise 0
+    # raval() will convert the 2D array to 1D array
+    y_pred = binarize(y_probs.reshape(-1, 1), threshold=threshold).ravel()
+
+    # Generate a classification report comparing the true labels with the predicted labels
+    report = classification_report(y_test, y_pred)
+    print("Classification Report:\n", report)
+
+    # Compute the confusion matrix comparing the true and predicted labels
+    cm = confusion_matrix(y_test, y_pred)
+
+    # Extract true negatives, false positives, false negatives, and true positives from the confusion matrix
+    tn, fp, fn, tp = cm.ravel()
+
+    # Calculate the false positive rate (FPR)
+    fpr = fp / (fp + tn)
+
+    # Create a figure and axis for plotting the confusion matrix
+    fig, ax = plt.subplots(figsize=(8, 6))
+    
+    # Display the confusion matrix with a color map
+    cax = ax.matshow(cm, cmap='GnBu', alpha=0.7)
+
+    # Annotate each cell in the confusion matrix with its count value
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            # Set text color based on the intensity of the color in the cell
+            color = 'white' if cm[i, j] > cm.max() / 2 else 'black'
+            ax.text(x=j, y=i, s=cm[i, j], va='center', ha='center', color=color)
+
+    # Set the labels for the x and y axes
+    ax.set_xticks([0, 1])
+    ax.set_yticks([0, 1])
+    ax.set_xticklabels(['No Fraud', 'Fraud'], position=(0.5, 0))
+    ax.set_yticklabels(['No Fraud', 'Fraud'])
+
+    # Position the x-axis labels at the bottom of the plot
+    ax.xaxis.set_label_position('bottom')
+    ax.xaxis.tick_bottom()
+
+    # Set the title and labels for the plot
+    plt.title(f'Threshold @ {threshold:.2f} with {fpr * 100:.2f}% FPR')
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.show()
+
+    # Return the classification report and the confusion matrix
+    return report, cm
+```
