@@ -89,3 +89,23 @@ Based on the comparison between your initial project plan and the current projec
 2. **Trying Out More Resampling Methods**:
    - While you did explore several resampling techniques like random undersampling, NearMiss, SMOTE-NC, and CTGAN, there are still more methods out there that could have been tested.
    - Expanding this exploration could help you find the best ways to handle imbalanced data in fraud detection, so this might be worth revisiting later.
+
+# Future Improvement
+
+1. **Advanced Feature Engineering**: I would explore more sophisticated feature engineering techniques, particularly focusing on deriving new features that could capture complex patterns in the data. For instance, creating interaction terms between key features or applying advanced methods like feature embedding for categorical variables could enhance model performance.
+
+2. **Model Explainability**: I would place a greater emphasis on model interpretability, particularly for the neural network models like TabNet. Techniques such as SHAP (SHapley Additive exPlanations) or LIME (Local Interpretable Model-agnostic Explanations) could be employed to better understand how the model is making decisions, which is crucial in financial applications like fraud detection.
+
+3. **Real-time Model Adaptation**: Given that fraud patterns evolve over time, I would explore online learning techniques that allow models to adapt to new patterns as they emerge, ensuring the model remains effective in a dynamic environment.
+
+4. **Fairness and Bias Mitigation**: Although the project touched on the fairness of models, future work could delve deeper into ensuring that the models do not exhibit any form of bias, especially in sensitive areas like age. Techniques for bias detection and mitigation could be integrated into the model training process.
+
+5. **Enhanced Resampling Techniques**: While the current project used a combination of NearMiss and CTGAN, I would consider experimenting with newer and more advanced resampling techniques or even adaptive synthetic sampling techniques that adjust to the data distribution dynamically during training.
+
+6. **Hybrid Models**: I would also consider the development of hybrid models that combine the strengths of different algorithms, such as integrating tree-based methods with neural networks in a more seamless and structured way, potentially leading to better overall performance.
+
+7. **Scalability and Efficiency**: Considering the large dataset size, I would focus on optimizing the computational efficiency of the models, possibly by leveraging more advanced hardware or distributed computing resources. This could involve parallelizing certain parts of the training process or using more efficient algorithms that are specifically designed to handle large-scale data.
+
+8. **Extended Evaluation Metrics**: I would expand the set of evaluation metrics to include more business-oriented metrics, such as cost-benefit analysis, which takes into account the financial impact of false positives and false negatives in fraud detection. This would ensure that the model is not only accurate but also aligned with business goals.
+
+These improvements could help in developing a more robust, interpretable, and efficient fraud detection system, better suited to the complexities of real-world financial environments.
