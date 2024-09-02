@@ -63,6 +63,8 @@ Based on the comparison between your initial project plan and the current projec
    - While you did explore several resampling techniques like random undersampling, NearMiss, SMOTE-NC, and CTGAN, there are still more methods out there that could have been tested.
    - Expanding this exploration could help you find the best ways to handle imbalanced data in fraud detection, so this might be worth revisiting later.
 
+# Evaluation Metrics
+![img.png](img.png)
 
 
 # References
