@@ -168,3 +168,92 @@ def evaluate_model_with_threshold(classifier, X_test, y_test, threshold=0.5):
     # Return the classification report and the confusion matrix
     return report, cm
 ```
+
+## 6. fnn training function
+```python
+def train(model, train_loader, val_loader, criterion, optimizer, epochs=20):
+    # Initialize lists to store the loss values for training and validation
+    train_losses = []
+    val_losses = []
+
+    # Loop over the number of epochs
+    for epoch in range(epochs):
+        # Set the model to training mode
+        model.train()
+        train_loss = 0.0
+        
+        # Iterate over the batches of data in the training loader
+        for inputs, labels in train_loader:
+            # If using GPU, move data to the appropriate device
+            # inputs, labels = inputs.to(device), labels.to(device)
+            
+            # Adjust the shape of labels to match the model's output shape
+            labels = labels.unsqueeze(1)
+            
+            # Reset the gradients for this batch
+            optimizer.zero_grad()
+            
+            # Forward pass: compute model predictions
+            outputs = model(inputs)
+            
+            # Calculate the loss between predictions and actual labels
+            loss = criterion(outputs, labels)
+            
+            # Backward pass: compute gradients
+            loss.backward()
+            
+            # Update model weights based on the gradients
+            optimizer.step()
+            
+            # Accumulate the training loss
+            train_loss += loss.item()
+        
+        # Calculate the average training loss for this epoch
+        train_losses.append(train_loss / len(train_loader))
+
+        # Initialize the validation loss
+        val_loss = 0.0
+        model.eval()  # Set the model to evaluation mode
+        all_preds = []
+        all_labels = []
+        
+        # Disable gradient computation for validation (saves memory and computations)
+        with torch.no_grad():
+            # Iterate over the batches of data in the validation loader
+            for inputs, labels in val_loader:
+                # Adjust the shape of labels to match the model's output shape
+                labels = labels.unsqueeze(1)
+                
+                # Forward pass: compute model predictions
+                outputs = model(inputs)
+                
+                # Calculate the loss for validation
+                loss = criterion(outputs, labels)
+                val_loss += loss.item()
+                
+                # Apply sigmoid to outputs and convert to binary predictions
+                preds = (torch.sigmoid(outputs) > 0.5).float()
+                
+                # Store predictions and true labels for further analysis
+                all_preds.extend(preds.cpu().numpy())
+                all_labels.extend(labels.cpu().numpy())
+        
+        # Calculate the average validation loss for this epoch
+        val_losses.append(val_loss / len(val_loader))
+
+        # Print progress every 10 epochs
+        if (epoch + 1) % 10 == 0:
+            print(f"Epoch {epoch+1}/{epochs}, Train Loss: {train_loss/len(train_loader)}, Val Loss: {val_loss/len(val_loader)}")
+            print("Validation Classification Report:")
+            print(classification_report(all_labels, all_preds, digits=4))
+
+    # Plot the training and validation loss curves
+    plt.figure(figsize=(10, 5))
+    plt.plot(range(1, epochs+1), train_losses, label='Train Loss')
+    plt.plot(range(1, epochs+1), val_losses, label='Val Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.title('Training and Validation Loss')
+    plt.legend()
+    plt.show()
+```
