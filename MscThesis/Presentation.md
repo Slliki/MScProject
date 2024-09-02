@@ -72,7 +72,7 @@ These two models offer different perspectives on how deep learning can be applie
 
 ### 2.4 Resampling
 #### 1. Under-sampling
-Starting with Under-Sampling, we employed two techniques: Random Under-Sampling and NearMiss. Random Under-Sampling involves reducing the number of majority class samples to balance the dataset, which is straightforward but may risk losing important information. NearMiss, on the other hand, selects majority class samples that are closest to the minority class, which helps in retaining the most informative data while still balancing the classes.
+Starting with Under-Sampling, we employed two techniques: Random Under-Sampling and NearMiss. Random Under-Sampling involves reducing the number of majority class samples to balance the dataset, which is straightforward but may risk losing important information. **NearMiss, on the other hand, selects majority class samples that are closest to the minority class, which helps in retaining the most informative data while still balancing the classes**.
 
 #### 2. Oversampling
 For Over-Sampling, we used SMOTENC and CTGAN. SMOTENC, or Synthetic Minority Over-sampling Technique for Nominal and Continuous features, generates synthetic samples for the minority class by interpolating between existing minority instances. This technique is particularly effective for datasets with both categorical and continuous features. CTGAN, a Conditional Tabular GAN, generates realistic synthetic data based on the distribution of the minority class, offering another approach to over-sampling that captures the complexity of the original data.
@@ -82,6 +82,12 @@ For Over-Sampling, we used SMOTENC and CTGAN. SMOTENC, or Synthetic Minority Ove
 This is a diagram of my entire process. Use mixed sampling for preprocessed data, that is, downsampling first and then upsampling. Upsampling needs to be done in CV. Specifically, after CV divides the new training set and validation set, oversampling is performed using the new training set. This helps prevent data leakage and alleviate overfitting.
 
 CV helps us to get the best parameters combination for each model.
+
+### 3.2 Data exploration
+Firstly this is the proportion of fraudulent and non-fraudulent samples in the original dataset. You can see the severe data imbalance.
+
+The second graph shows the total number of samples according to age group as well as the number of fraudulent samples per age group and labelled with the fraud rate per age group.
+We can see that the majority of fraud samples occur within the 40 and 50 year old age groups and that the fraud rate increases as age increases.
 
 ## 4. Evaluation and Results
 ### 4.1 Treessss
