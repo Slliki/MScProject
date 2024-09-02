@@ -114,6 +114,6 @@ Third, we improve the accuracy of fraud detection by optimizing the parameters o
 
 Finally, we provide a framework for future research and highlight areas that need further exploration, such as integrating other data sources or exploring newer neural network architectures.
 ### 5.2 Limitations and future work
-As for the limitations of this study, first of all, the exploration of resampling methods may not be sufficient. We can explore more resampling methods in the future, such as downsampling using algorithms such as TomekLink. On the other hand, although the model we adopted provides valuable insights, a broader exploration of model architectures, which may include other neural network models or comprehensive methods that combine multiple methods (such as stacking), will benefit this study.
+For the limitations of this study, there are a few things to consider. First off, our exploration of resampling methods might not have been thorough enough. In the future, we could dive into more resampling techniques, like using downsampling methods such as TomekLink. Also, while the model we used gave us some valuable insights, it would be beneficial to explore a wider range of model architectures. This could include trying out other neural network models or even more comprehensive approaches, like stacking different models together.
 
-In addition, we can also try to study online fraud detection projects and perform fraud detection through real-time monitoring of cloud services.
+Another thing we could look into is online fraud detection projects. It might be worth exploring how to perform fraud detection through real-time monitoring using cloud services.
