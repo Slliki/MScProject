@@ -70,6 +70,59 @@ The second model is **TabNet**. TabNet is specifically designed to handle tabula
 
 These two models offer different perspectives on how deep learning can be applied to our problem, with FNN providing a straightforward approach and TabNet offering a more tailored solution for tabular data.
 
+
+TabNet is a deep learning model specifically designed for tabular data. It combines an attention-based feature selection mechanism with iterative decision steps, allowing the model to select subsets of features and learn from them. This structure improves performance and interpretability, making TabNet particularly suited for tasks involving structured data. Here's a breakdown of TabNet's structure:
+
+#### 1. **Overall Architecture**
+TabNet operates through a multi-step decision process where each step selectively chooses a subset of input features to process, producing partial outputs. These outputs are accumulated over the steps to form the final prediction. This iterative feature selection resembles the stepwise splits in tree-based models.
+
+TabNet's architecture consists of:
+- **Feature Transformer**: This part transforms the raw input features into meaningful representations, similar to hidden layers in traditional neural networks.
+- **Attentive Transformer**: This component applies attention mechanisms to selectively choose which features to focus on in each decision step.
+- **Decision Steps**: Multiple decision steps run sequentially, each selecting features and updating the feature representation progressively.
+
+#### 2. **Feature Selection Mechanism (Attention Masks)**
+A unique aspect of TabNet is its **feature selection mechanism**, which relies on **attention masks** to determine which input features will be used in each decision step.
+
+In each step:
+- The **Attentive Transformer** assigns a weight to each input feature, indicating how relevant the feature is for that step.
+- This attention mask, which is a probabilistic distribution over the input features, selects a subset of features by focusing on the most important ones.
+- The selected features are then passed through the **Feature Transformer**, which processes them for the current step.
+
+This selective attention mechanism ensures that the model focuses on a few relevant features in each step, enhancing interpretability and preventing over-reliance on unnecessary features.
+
+#### 3. **Sparsity Regularization**
+TabNet includes a sparsity loss (`M_loss`) to control the model’s feature selection behavior. This regularization encourages the model to use as few features as possible in each decision step, improving both generalization and interpretability.
+
+- **M_loss** is computed by summing the feature selection weights across all decision steps. 
+- By incorporating this sparsity loss into the total loss, TabNet encourages the model to learn efficient feature representations while minimizing the number of features it uses.
+
+#### 4. **Multiple Decision Steps**
+TabNet uses multiple **decision steps** to process the input data iteratively. In each step, the model selects a set of features based on the output of the previous step and processes them.
+
+- The output from each step is passed to the next step, allowing the model to refine its feature selection over time.
+- The output from all steps is also accumulated, contributing to the final prediction.
+
+Each decision step has its own independent sparsity loss, which helps ensure that each step only selects the most relevant features.
+
+#### 5. **Workflow of TabNet**
+The overall workflow of TabNet can be summarized as:
+1. **Input Embedding**: The raw input data is embedded into a higher-dimensional space.
+2. **Multiple Decision Steps**: The model iteratively selects features through a series of decision steps. Each step consists of a Feature Transformer and an Attentive Transformer.
+3. **Sparsity Control**: The model uses sparsity regularization to minimize the number of features selected in each step.
+4. **Cumulative Output**: The outputs from all decision steps are accumulated to generate the final prediction.
+
+#### 6. **Interpretability**
+A major strength of TabNet is its interpretability. In each decision step, the model explicitly chooses which features to use, and this feature selection can be visualized through the attention masks. Additionally, sparsity regularization encourages the model to use fewer features, making the decision process more transparent.
+
+#### 7. **Advantages of TabNet**
+- **Efficiency for Tabular Data**: Compared to traditional deep learning models, TabNet is better suited for structured tabular data and can handle mixed feature types (categorical and numerical).
+- **Interpretability**: The attention-based feature selection allows for a clear understanding of which features the model is using to make predictions.
+- **Sparsity**: By enforcing sparsity through regularization, TabNet reduces model complexity while maintaining high predictive performance.
+
+#### Conclusion
+TabNet combines neural networks with an attention-based feature selection mechanism, allowing it to process tabular data efficiently. It works through a series of decision steps, using attention masks to selectively choose features at each step. The model's interpretability is enhanced by sparsity regularization, which ensures that only the most relevant features are used in each decision step. This makes TabNet an effective and interpretable model for tabular data tasks.
+
 ### 2.4 Resampling
 #### 1. Under-sampling
 Starting with Under-Sampling, we employed two techniques: Random Under-Sampling and NearMiss. Random Under-Sampling involves reducing the number of majority class samples to balance the dataset, which is straightforward but may risk losing important information. **NearMiss, on the other hand, selects majority class samples that are closest to the minority class, which helps in retaining the most informative data while still balancing the classes**.

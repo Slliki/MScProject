@@ -33,6 +33,74 @@ TabNet 通过稀疏性损失来控制每一层特征选择的稀疏性。稀疏�
 
 稀疏性损失（M_loss） 是通过鼓励稀疏性的惩罚项。如果这个值太大，表示模型选择了太多特征，违反了稀疏性的原则。因此，通过在总损失中减去稀疏性损失乘以权重（lambda_sparse），模型将被迫减少特征选择的数量，以最小化总损失，从而鼓励更稀疏的特征选择。
 
+```python
+class CustomTabNetClassifier(TabNetClassifier):
+    def __init__(self, pos_weight, *args, **kwargs):
+        # Initialize the custom TabNet classifier by calling the parent constructor
+        super(CustomTabNetClassifier, self).__init__(*args, **kwargs)
+        # Define BCEWithLogitsLoss with pos_weight, ensuring it's on the model's device
+        self.loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight.to(self.device))
+    
+    def compute_loss(self, y_pred, y_true):
+        # Custom loss calculation using BCEWithLogitsLoss
+        # Move true labels to the same device as the model
+        y_true = y_true.to(self.device)
+        # Squeeze predictions from [batch_size, 1] to [batch_size] for compatibility
+        y_pred = y_pred.squeeze(dim=-1)
+        # Compute and return the loss
+        return self.loss_fn(y_pred, y_true)
+    
+    def _train_batch(self, X, y):
+        """
+        Override _train_batch to use the custom loss function.
+        """
+        # Set model to training mode (enables dropout, batch normalization, etc.)
+        self.network.train()
+
+        # Move input data and labels to the same device as the model
+        X, y = X.to(self.device), y.to(self.device)
+
+        # Zero out gradients to prevent accumulation
+        for param in self.network.parameters():
+            param.grad = None
+
+        # Forward pass to get model output and sparsity loss (M_loss)
+        output, M_loss = self.network(X)
+
+        # Calculate the loss using the custom compute_loss function
+        loss = self.compute_loss(output, y)
+        # Incorporate sparsity loss into the total loss (subtracting its weighted value)
+        loss = loss - self.lambda_sparse * M_loss
+
+        # Backpropagate to compute gradients
+        loss.backward()
+        # Update model parameters
+        self._optimizer.step()
+
+        # Return a log with 'loss' and 'batch_size' for training progress tracking
+        return {"loss": loss.item(), "batch_size": X.size(0)}
+
+
+```
+
+These two steps are explained below:
+
+- 在代码中，M_loss 是通过网络的前向传播过程中自然计算并返回的
+- In the code, M_loss is calculated and returned naturally through the forward propagation process of the network:
+
+1. **Calculating the loss:**
+   ```python
+   loss = self.compute_loss(output, y)
+   ```
+   This line of code uses the custom `compute_loss` function to compute the loss value. `output` is the predicted output of the model and `y` is the true label. `compute_loss` uses the binary cross-entropy loss function `BCEWithLogitsLoss` with `pos_weight`, which is designed to deal with the problem of category imbalance by giving higher weights to a small number of categories. The computed loss is used to guide the gradient update of the model.
+
+2. **Introduces sparsity loss:**
+   ```python
+   loss = loss - self.lambda_sparse * M_loss
+   ```
+   This line of code introduces the model's sparsity loss (`M_loss`) into the total loss. The sparsity loss is a regularisation term in the TabNet model that is used to encourage the model to use fewer features in order to enhance the interpretability of the model and avoid overfitting. `lambda_sparse` is the weight of the sparsity loss, which is used to adjust the model's training objective by subtracting `lambda_sparse * M_loss` from the total loss so that it strikes a balance between correct classification and feature selection.
+
+
 ## 3. CTGAN
 ```python
 # 创建CTGAN实例
